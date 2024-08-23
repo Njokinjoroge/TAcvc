@@ -47,7 +47,7 @@ const argv = yargs
     default: 3306,
   })
   .argv;
-  
+
 /*
 - This function establishes a connection to the MySQL database using the mysql2/promise library.
 - The connection parameters are taken from the command-line arguments (host, port, username, password).
@@ -77,8 +77,8 @@ const connectToDatabase = async () => {
   - The email column is set to be unique to prevent duplicate entries. 
   - The table is created only if it doesn't already exist.
   */ 
-  const createUsersTable = async (connection) => {
-      const createTableQuery = `
+const createUsersTable = async (connection) => {
+    const createTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
           id INT AUTO_INCREMENT PRIMARY KEY,
           name VARCHAR(255),
@@ -93,4 +93,47 @@ const connectToDatabase = async () => {
         console.error('Error creating table:', error.message);
       }
   };
+
+/*
+- This function processes the CSV file, parsing each row into an object containing name, surname, and email.
+- The name and surname are capitalized, and the email is converted to lowercase. 
+- The script validates the email format using a regular expression;
+- if valid, the data is stored in the results array. 
+- If the dry_run option is active, the script simply logs the results without inserting them into the database.
+*/ 
+const processCSVFile = async (connection, dryRun) => {
+    const results = [];
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(path.resolve(__dirname, argv.file))
+          .pipe(csv())
+          .on('data', (data) => {
+            const name = capitalize(data.name);
+            const surname = capitalize(data.surname);
+            const email = data.email.toLowerCase();
+      
+            if (validateEmail(email)) {
+              results.push({ name, surname, email });
+            } else {
+              console.error(`Invalid email format: ${email}`);
+            }
+          })
+          .on('end', async () => {
+            if (dryRun) {
+              console.log('Dry run mode: No data inserted into the database.');
+              console.log(results);
+            } else {
+              try {
+                await insertDataIntoDB(connection, results);
+              } catch (error) {
+                console.error('Error during data insertion:', error.message);
+              }
+            }
+            resolve();
+          })
+          .on('error', (error) => {
+            console.error('Error reading the CSV file:', error.message);
+            reject(error);
+          });
+    });
+};
 
