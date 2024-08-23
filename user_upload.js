@@ -137,3 +137,9 @@ const processCSVFile = async (connection, dryRun) => {
     });
 };
 
+/*
+- This helper function capitalizes the first letter of a string and converts the rest of the string to lowercase.
+*/ 
+const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
