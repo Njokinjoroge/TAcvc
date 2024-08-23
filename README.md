@@ -15,3 +15,20 @@
 - If the `--create-table` flag is provided, the script creates/rebuilds the `users` table.
 - The script reads the CSV file using  `csv-parser`, capitalizes the names and surnames, validates the email, and inserts valid records into the database.
 - The script also checks for errors, such as invalid emails or issues with database insertion.
+
+## Running The Script
+
+1. Create the users table
+`node user_upload.js --create_table -u root -p (password from MySQL) -h localhost`
+
+2. Insert data from CSV
+`node user_upload.js --file users.csv --create_table -u root -p (password from MySQL) -h localhost`
+
+3. Dry run without inserting
+`node user_upload.js --file users.csv --dry-run --create_table -u root -p (password from MySQL) -h localhost`
+
+4. Help
+`node user_upload.js --help`
+
+5. Run the script 
+`node user_upload.js --file users.csv -u root -p (password from MySQL) -h localhost`
