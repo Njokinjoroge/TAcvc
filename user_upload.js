@@ -170,4 +170,27 @@ const insertDataIntoDB = async (connection, users) => {
     console.log('Data inserted successfully.');
 };
 
+/*
+- This is the main entry point of the script.
+- It first connects to the MySQL database, then checks if the create_table command-line argument is provided.
+- If so, it creates or rebuilds the users table. If the file argument is provided,
+- it processes the CSV file (with optional dry-run mode). 
+- Finally, it closes the database connection.
+*/ 
+(async function main() {
+    const connection = await connectToDatabase();
+  
+    try {
+      if (argv.create_table) {
+        await createUsersTable(connection);
+      } else if (argv.file) {
+        await processCSVFile(connection, argv.dry_run);
+      } else {
+        console.log('Please provide the necessary command-line arguments. Use --help for more information.');
+      }
+    } finally {
+      await connection.end();
+    }
+})();
+
 
