@@ -1,4 +1,4 @@
-// Required dependencies ie mysql2, csv-parse, yargs
+#!/usr/bin/env node
 const fs = require('fs');
 const path = require('path'); 
 const csv = require('csv-parser');  
