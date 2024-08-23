@@ -48,3 +48,27 @@ const argv = yargs
   })
   .argv;
 
+/*
+  - This function creates or rebuilds the users table in the MySQL database. 
+  - The table has three columns: name, surname, and email. 
+  - The email column is set to be unique to prevent duplicate entries. 
+  - The table is created only if it doesn't already exist.
+  */ 
+  const createUsersTable = async (connection) => {
+      const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255),
+          surname VARCHAR(255),
+          email VARCHAR(255) UNIQUE
+        );
+      `;
+      try {
+        await connection.query(createTableQuery);
+        console.log('Users table created/rebuilt successfully.');
+      } catch (error) {
+        console.error('Error creating table:', error.message);
+      }
+  };
+
+  
