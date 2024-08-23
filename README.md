@@ -32,3 +32,6 @@
 
 5. Run the script 
 `node user_upload.js --file users.csv -u root -p (password from MySQL) -h localhost`
+
+## Additional Notes
+- Make sure your MySQL server is running and accessible with the provided credentials.
