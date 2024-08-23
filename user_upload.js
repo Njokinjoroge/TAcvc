@@ -152,3 +152,22 @@ const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email) && email.split('@')[1].includes('.');
 };
+
+/*
+- This function inserts the processed user data into the users table in the database. 
+- It uses prepared statements to safely insert each user's name, surname, and email.
+- If there’s an error (e.g., due to a duplicate email), the error is logged.
+*/ 
+const insertDataIntoDB = async (connection, users) => {
+    const insertQuery = 'INSERT INTO users (name, surname, email) VALUES (?, ?, ?)';
+    for (const user of users) {
+      try {
+        await connection.execute(insertQuery, [user.name, user.surname, user.email]);
+      } catch (error) {
+        console.error(`Error inserting user: ${user.email}.`, error.message);
+      }
+    }
+    console.log('Data inserted successfully.');
+};
+
+
