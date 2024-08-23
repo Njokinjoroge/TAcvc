@@ -47,6 +47,29 @@ const argv = yargs
     default: 3306,
   })
   .argv;
+  
+/*
+- This function establishes a connection to the MySQL database using the mysql2/promise library.
+- The connection parameters are taken from the command-line arguments (host, port, username, password).
+- The database name is hardcoded as 'user_upload_db'.
+*/ 
+const connectToDatabase = async () => {
+    try {
+      const connection = await mysql.createConnection({
+        host: argv.h,
+        port: argv.port,
+        user: argv.u,
+        password: argv.p,
+        database: 'user_upload_db',
+      });
+      return connection;
+    } catch (error) {
+      console.error('Error connecting to the database:', error.message);
+      process.exit(1);
+    }
+};
+
+
 
 /*
   - This function creates or rebuilds the users table in the MySQL database. 
@@ -71,4 +94,3 @@ const argv = yargs
       }
   };
 
-  
