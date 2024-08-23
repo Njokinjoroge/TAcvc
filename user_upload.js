@@ -143,3 +143,12 @@ const processCSVFile = async (connection, dryRun) => {
 const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
+/*
+- This function checks whether an email is in a valid format using a regular expression. 
+- If the email is valid, it returns true; otherwise, it returns false.
+*/ 
+const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) && email.split('@')[1].includes('.');
+};
